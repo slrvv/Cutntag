@@ -20,22 +20,22 @@ repResult <- read.table("/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/a
                         header=T)
 
 repResult_hist <- repResult[,c("H3K27ac_1", "H3K27ac_2", 
-                               "H3K4me1_1", "H3K4me3_1", "H3K4me3_2",
+                               "H3K4me1_1","H3K4me1_2", "H3K4me3_1", "H3K4me3_2",
                                "IgG_1", "IgG_2")]
 repResult_hist <- repResult_hist[c("H3K27ac_1", "H3K27ac_2", 
-                                   "H3K4me1_1", "H3K4me3_1", "H3K4me3_2",
+                                   "H3K4me1_1", "H3K4me1_2","H3K4me3_1", "H3K4me3_2",
                                    "IgG_1", "IgG_2"),]
 
 repResult_hist <- as.matrix(repResult_hist)
 corrplot(repResult_hist, method = "color",addCoef.col = "black", number.digits = 2, number.cex = 0.65)
 
 
-repResult_prot <- repResult[,c("CR56_1", "CR56_2", "CR56_3",
+repResult_prot <- repResult[,c("CR56_1", "CR56_2",
                                "S173_1", "S173_2","Flag_1", "Flag_2",
                                "G4_1", "G4_2",
                                "IgG_1", "IgG_2")]
 
-repResult_prot <- repResult_prot[c("CR56_1", "CR56_2", "CR56_3",
+repResult_prot <- repResult_prot[c("CR56_1", "CR56_2",
                                    "S173_1", "S173_2","Flag_1", "Flag_2",
                                    "G4_1", "G4_2",
                                    "IgG_1", "IgG_2"),]

@@ -12,7 +12,7 @@
 
 #-----------------------------Paths--------------------------------------------#
 #reference genome of the spike-in
-spikeInRef=/project/genomes/Escherichia_coli/K12_DH10B/NCBI/2008-03-17/Sequence/Bowtie2Index/genome
+spikeInRef=/project/genomes/mm10/Sequence/Bowtie2Index_Large/genome
 #chromsize files for the reference genome of experiment (human)
 chromSize=/project/ChromGroup/Serkan_Project/cut_and_tag_analysis/tools/genome_annotations/hg38.chrom.sizes
 #root path of th whole project
@@ -25,7 +25,7 @@ name=$4
 #------------------------Spike-in calibration script---------------------------#
 cores=8
 
-echo "Align to ecoli"
+echo "Align to mm10"
 
 echo $projPath/alignment/sam/${name}_bowtie2_spikeIn.sam
 ## bowtie2-build path/to/Ecoli/fasta/Ecoli.fa /path/to/bowtie2Index/Ecoli

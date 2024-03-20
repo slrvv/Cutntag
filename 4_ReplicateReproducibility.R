@@ -12,7 +12,7 @@ args <- commandArgs(trailingOnly=TRUE)
 projPath <- args[1]
 projPath <- "/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/"
 sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_align_formatted.csv"),
+                                 "/experiment_summary_Latest.csv"),
                           header = T, sep = ",")
 
 sampleList <- sort(sampletable$SampleName)

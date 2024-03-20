@@ -14,7 +14,7 @@ projPath <- args[1]
 
 #------------------------Sequencing depth--------------------------------------#
 sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_align_formatted.csv"),
+                                 "/experiment_summary_Latest.csv"),
                           header = T, sep = ",")
 
 sampleList <- sampletable$SampleName

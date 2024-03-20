@@ -13,5 +13,6 @@ The modules are:
 4. Filter, conversion and Reproducibility Assessment: Filtering of low quality reads, convert files to bam bed and bw and assess reproducibility
 between replicates.
 5. IgG substraction and scaling
+6. Peak calling with SEACR
 
 

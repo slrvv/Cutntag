@@ -67,6 +67,7 @@ fragLen <- read.table("/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/ali
                       header=T, stringsAsFactors = T)
 fragLen$Replicate <- as.factor(fragLen$Replicate)
 
+
 fig5A = fragLen %>% ggplot(aes(x = sampleInfo,
                                y = fragLen,
                                weight = Weight, 

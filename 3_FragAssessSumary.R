@@ -14,7 +14,7 @@ projPath <- "/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/"
 
 #------------------------Sequencing depth--------------------------------------#
 sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_align_formatted.csv"),
+                                 "/experiment_summary_Latest.csv"),
                           header = T, sep = ",")
 alignSummary <- read.table(paste0(projPath,
                                   "/alignment/summary_seq_depth_all_experiments.txt"),
