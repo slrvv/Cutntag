@@ -25,32 +25,32 @@ EXPSUMMARYPEAKS=$PROJECTROOT/experiment_summary_peaks.csv
 
 #-------------------------Module Paths-----------------------------------------#
 #bash file that does the first step QC
-QC=$PIPELINE/1_QC_Preprocessing.sh
+QC=$PIPELINE/1_QualityControl/1_QC_Preprocessing.sh
 #bash file for alignment
-ALIGN=$PIPELINE/2_Alignment.sh
+ALIGN=$PIPELINE/2_Alignment/2_Alignment.sh
 #bash file for spike in calibration
-SPIKEIN=$PIPELINE/2bis_SpikeInAlignment.sh
+SPIKEIN=$PIPELINE/2_Alignment/2bis_SpikeInAlignment.sh
 #makes a summary of seq depth
-SUMMARYAL=$PIPELINE/3_MappingSummary.R
+SUMMARYAL=$PIPELINE/3_AssessAlignment/3_MappingSummary.R
 #assess duplicates
-DUP=$PIPELINE/3_DuplicateAssess.sh
+DUP=$PIPELINE/3_AssessAlignment/3_DuplicateAssess.sh
 #Fragment assessment
-FRAG=$PIPELINE/3_FragAssess.sh
+FRAG=$PIPELINE/3_AssessAlignment/3_FragAssess.sh
 #summary of fragment and duplicates assessment
-DUPSUM=$PIPELINE/3_DuplicateAssessSumary.R
-FRAGSUM=$PIPELINE/3_FragAssessSumary.R
-SPIKEINSUM=$PIPELINE/3_SpikeinSummary.R
+DUPSUM=$PIPELINE/3_AssessAlignment/3_DuplicateAssessSumary.R
+FRAGSUM=$PIPELINE/3_AssessAlignment/3_FragAssessSumary.R
+SPIKEINSUM=$PIPELINE/3_AssessAlignment/3_SpikeinSummary.R
 #Filterandconvert
-FILTERCONV=$PIPELINE/4_FilterAndConvert.sh
+FILTERCONV=$PIPELINE/4_FilteringAndConversion/4_FilterAndConvert.sh
 #Replicate reproducibility assessment
-REPREPRO=$PIPELINE/4_ReplicateReproducibility.R
+REPREPRO=$PIPELINE/4_FilteringAndConversion/4_ReplicateReproducibility.R
 #Substract Igg 
-IGGSUB=$PIPELINE/5_IgGSubstract.sh
-IGGSUBR=$PIPELINE/5_IgGSubstract.R
+IGGSUB=$PIPELINE/5_SubstractionAndScaling/5_IgGSubstract.sh
+IGGSUBR=$PIPELINE/5_SubstractionAndScaling/5_IgGSubstract.R
 #Peak calling modules
-PEAKS=$PIPELINE/6_PeakCalling.sh
-PEAKSUMM=$PIPELINE/6_PeakCallingSummary.R
-PEAKSFRIP=$PIPELINE/6_PeakCallingFrips.R
+PEAKS=$PIPELINE/6_PeakCalling/6_PeakCalling.sh
+PEAKSUMM=$PIPELINE/6_PeakCalling/6_PeakCallingSummary.R
+PEAKSFRIP=$PIPELINE/6_PeakCalling/6_PeakCallingFrips.R
 
 #-------------------------1. Quality Control-----------------------------------#
 
