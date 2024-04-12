@@ -12,7 +12,7 @@
 
 #-----------------------------Paths--------------------------------------------#
 #reference genome of the spike-in
-spikeInRef=/project/genomes/Escherichia_coli/K12_DH10B/NCBI/2008-03-17/Sequence/Bowtie2Index/genome
+spikeInRef=$5
 #chromsize files for the reference genome of experiment (human)
 chromSize=/project/ChromGroup/Serkan_Project/cut_and_tag_analysis/tools/genome_annotations/hg38.chrom.sizes
 #root path of th whole project

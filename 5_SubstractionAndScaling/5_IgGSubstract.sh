@@ -14,5 +14,5 @@ FILE1=$2
 IGG=$3
 #----------------Igg substaction-----------------------------------------------#
 
-prun python bigwigCompare -b1 $BWPATH/$FILE1 -b2 $BWPATH/$IGG \
- --operation subtract  -p 8   -o $BWPATH/${FILE1}.substracted.igg.bw
+prun python bigwigCompare -b1 $BWPATH/$FILE1_bowtie2.fragments.normalized.bw -b2 $BWPATH/$IGG \
+ --operation subtract  -p 8 -o $BWPATH/${FILE1}_bowtie2.fragments.normalized.substracted.igg.bw

@@ -1,30 +1,50 @@
-################################################################################
-#                                                                              #
-# cut & tag pipeline R-loop project                                            #
-#                                                                              #
-# all modules together                                                         #
-# wetlab: Serkan Meydaner & Celeste Franconi                                   #
-# purpose: This script puts all module scripts together (one script per step)  #
-# for the analysis of the Cut&tag data. Paired-end sequencing and no Spike-In  #
-################################################################################
+#-------------------------------------------------------------------------------
+# Author:  Sara Lopez Ruiz de Vargas
+# Email:  lopez_s@molgen.mpg.de
+#
+# Date:    2024-04-12
+#
+# Script Name: cut_and_tag_pipeline_tutorial.sh
+#
+# Original Pipeline: https://yezhengstat.github.io/CUTTag_tutorial/#I_Introduction
+#
+# Script Description: This is a general use tutorial pipeline. Change the variables
+# marked. Feel free to adapt the R plotting scripts so that your plots look their
+# best.
+#-------------------------------------------------------------------------------
 
 
 #--------------------------Project Paths---------------------------------------#
+
+#Reminder: In shell scripting variables are assigned using = without spaces
+#Example: PROJECTROOT=/this/is/my/path will work.
+#         PROJECTROOT = /this/is/my/path doesn't work.
+# To access a variable we use '$',
+# Example: echo $PROJECTROOT will print whatever is in that variable.
+#          echo PROJECTROOT will throw an error or not work as expected.
+
 #project folder
-PROJECTROOT=/project/ChromGroup/Serkan_Project/cut_and_tag_rloops
-#rootfolder to the raw experimental data
-RAWROOT=/project/solexawork/pipelined/230920_SN435_20_AACTTJMM5/demux_20230921_SN435-AACTTJMM5_std-8d1/Project_V
-#path to your experimental data
-PIPELINE=/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/pipeline
+PROJECTROOT=/what/is/your/folder
+
+#rootfolder to the raw experimental data (folder from SeqCore)
+
+#Reminder: Raw data files are huge, there is no need to copy them into 
+#your own directory, this leads to IT related problems.
+RAWROOT=/what/is/ypur/seqcore/path
+#path to the folder with your experimental data
+PIPELINE=/where/is/the/pipeline
 #csv file with all of the experiments and a short id name
-EXPSUMMARY=$PROJECTROOT/experiment_summary.csv
+EXPSUMMARY=$PROJECTROOT/yourfile.csv
 #csv file with all of the experiments but replicates are given in columns
 #more suitable for the alignment step
-EXPSUMMARYAL=$PROJECTROOT/experiment_summary_Latest.csv
-EXPSUMMARYPEAKS=$PROJECTROOT/experiment_summary_peaks.csv
+EXPSUMMARYAL=$PROJECTROOT/yourfile.csv
+#csv file for peaks 
+EXPSUMMARYPEAKS=$PROJECTROOT/yourfile.csv
 
+##Make a script to produce the two files from exp summary script to produce th
 
 #-------------------------Module Paths-----------------------------------------#
+# No need to change anything from now on
 #bash file that does the first step QC
 QC=$PIPELINE/1_QualityControl/1_QC_Preprocessing.sh
 #bash file for alignment
@@ -64,23 +84,19 @@ echo " "
 while read line ; do
     set $line
     IFS=$','; split=($line); unset IFS;
-    if [[ $accountId == "Sample" ]]; then
-        continue
-    fi
     echo "Name of experiment ${split[0]}"
     echo "Name of file ${split[1]}"
     bash ${QC} $PROJECTROOT/FastQCResults/${split[0]} $RAWROOT/${split[1]}
     echo " "
 done < <(tail -n +2 $EXPSUMMARY)
-# 
-# #---------------------------2. Alignment---------------------------------------#
-# 
-#Alignment for each experiment, each experiment has 2 replicates EXPSUMMARYAL
-#has one row per experiment and columns per replicate. split[0] is the name
-#of the experiment split[1] is first replicate and split[2] is the second.
-#The experiments were repeated by two different people which is marked by the _1
-#or _2 in the name (split[0])
-cores=8
+
+#---------------------------2. Alignment---------------------------------------#
+
+#Alignment for each experiment, all experiments are paired so we have 2 files
+#per experiment. EXPSUMMARYAL has one row per experiment and columns per file. split[0] is the name
+#of the experiment split[1] is R1 and split[2] is R2.
+
+cores=8 # Feel free to change this variable 
 ref=/project/genomes/Homo_sapiens/UCSC/hg38/Sequence/Bowtie2Index_Large/genome
 echo "Alignment to hg38"
 echo " "
@@ -104,6 +120,7 @@ done < <(tail -n +2 $EXPSUMMARYAL)
 echo "Make Alignment Summary"
 Rscript $SUMMARYAL $PROJECTROOT
 echo " "
+
 #Create summary plots for the alignments using the 3_MappingPlots.R script
 
 #Assess the number of duplicates
@@ -129,36 +146,42 @@ while read line ; do
      echo " "
 done < <(tail -n +2 $EXPSUMMARYAL)
 
-#Generate summary tables for both assessments
+#Generate summary tables for fragnment and duplicates statistics
 echo "Summary Tables"
 Rscript $DUPSUM $PROJECTROOT
 Rscript $FRAGSUM $PROJECTROOT
 
+# If you want to make plots to visualize fragment and duplicate statistics
+#3_PlotsFragandDup.R
+
 #------------------4. Filter and convert---------------------------------------#
 ##minquality score to be filtered
-MINQUAL=2
+MINQUAL=2 ## Feel free to change this variable
+
 #Filter and convert & reproducibility assessment
 echo "Filter and convert"
 while read line ; do
      set $line
      IFS=$','; split=($line); unset IFS;
-     if [[ $1 == "SampleName" ]]; then
-         continue
-     fi
      echo "Name of the sample ${split[0]}"
      bash $FILTERCONV $MINQUAL $PROJECTROOT ${split[0]}
      echo " "
 done < <(tail -n +2 $EXPSUMMARYAL)
 
-#Create the correlation table to be plotted later
-
+#Create the correlation table between replicates
+# We correlate the replicates for each experiment (remember that at this step no
+# spike in or IgG substraction has been done) if your correlation with IgG is
+# really high you might want to try to remove it.
 Rscript $REPREPRO $PROJECTROOT
+
+##Plot replicate matrices using 4_ReproducibilityPlots.R
 
 #-------------------5. Normalization Igg and Spike in--------------------------#
 
-##Spike-In alignment
-cores=8
-
+#Spike-In alignment
+cores=8 # feel free to change this variable
+# Path to the Bowtie2 index that you are interested in.
+# This is the one for e.coli
 refspike=/project/genomes/Escherichia_coli/K12_DH10B/NCBI/2008-03-17/Sequence/Bowtie2Index/genome
 
 echo "Alignment to Spike in genome"
@@ -179,58 +202,45 @@ done < <(tail -n +2 $EXPSUMMARYAL)
 echo "Spike-in summary"
 Rscript $SPIKEINSUM $PROJECTROOT
 
-##Igg substraction need to transform to bw files
+#you can adapt 3_MappingPlots.R script to plot the summaries for spike-in
+
+#IgG substraction 
+
+IGGNEED=true ## change to false if IgG substraction is not needed
+#Igg substraction need to transform to bw files
 
 echo "Convert normalized to bigwig"
 
 
 CHROMSIZES=$PIPELINE/hg38_new.chrom.sizes
 
-while read line ; do
-     set $line
-     IFS=$','; split=($line); unset IFS;
-     bedGraphToBigWig $PROJECTROOT/alignment/bedgraph/${split[0]}_bowtie2.fragments.normalized.bedgraph \
-     $CHROMSIZES $PROJECTROOT/alignment/bigwig/${split[0]}_bowtie2.fragments.normalized.bw
-done < <(tail -n +2 $EXPSUMMARYAL)
+if [ "$IGGNEED" = true]; then 
+  while read line ; do
+       set $line
+       IFS=$','; split=($line); unset IFS;
+       bedGraphToBigWig $PROJECTROOT/alignment/bedgraph/${split[0]}_bowtie2.fragments.normalized.bedgraph \
+       $CHROMSIZES $PROJECTROOT/alignment/bigwig/${split[0]}_bowtie2.fragments.normalized.bw
+  done < <(tail -n +2 $EXPSUMMARYAL)
 
-
-echo "Igg substraction w/o spike in norm"
-while read line ; do
-     set $line
-     IFS=$','; split=($line); unset IFS;
-     bash $IGGSUB $PROJECTROOT  ${split[0]}_bowtie2.fragments.bw  \
-     IgG_2_bowtie2.fragments.bw
-done < <(tail -n +2 $EXPSUMMARYPEAKS)
-
-# echo "Igg substraction with spike in norm"
-# 
-
-echo "Igg substraction w/o spike in norm"
-while read line ; do
-     set $line
-     IFS=$','; split=($line); unset IFS;
-     bash $IGGSUB $PROJECTROOT  ${split[0]}_bowtie2.fragments.normalized.bw  \
-     IgG_merged_bowtie2.fragments.bw
-done < <(tail -n +2 $EXPSUMMARYPEAKS)
-
-while read line ; do
-     set $line
-     IFS=$','; split=($line); unset IFS;
-     Rscript $IGGSUBR $PROJECTROOT ${split[0]}_bowtie2.fragments.normalized.bw.substracted.igg.bw
-done < <(tail -n +2 $EXPSUMMARYPEAKS)
+  echo "Igg substraction with spike in norm"
+  while read line ; do
+       set $line
+       IFS=$','; split=($line); unset IFS;
+       bash $IGGSUB $PROJECTROOT ${split[0]}  \
+       IgG_merged_bowtie2.fragments.bw
+  done < <(tail -n +2 $EXPSUMMARYPEAKS)
+  
+  while read line ; do
+       set $line
+       IFS=$','; split=($line); unset IFS;
+       Rscript $IGGSUBR $PROJECTROOT ${split[0]}_bowtie2.fragments.normalized.substracted.igg.bw
+  done < <(tail -n +2 $EXPSUMMARYPEAKS)
+fi
 
 
 #------------------6. Peak Calling with SEACR----------------------------------#
 
-#For the first round many of the experiments didn't work. We keep only the
-#following:
-#1. H3K27ac_1_bowtie2.fragments.bw
-#2. H3K4me1_1_bowtie2.fragments.bw
-#3. H3K4me3_1_bowtie2.fragments.bw
-#4. H3K4me3_2_bowtie2.fragments.bw
-#5. Flag_1_bowtie2.fragments.bw
 
-#These are listed in file $EXPSUMMARYPEAKS
 
 while read line ; do
      set $line
@@ -238,9 +248,6 @@ while read line ; do
      echo "${split[0]}"
      bash $PEAKS $PROJECTROOT ${split[1]} ${split[0]}
 done < <(tail -n +2 $EXPSUMMARYPEAKS)
-
-
-
 
 #Create summary statistics on the peaks called
 Rscript $PEAKSUMM $PROJECTROOT

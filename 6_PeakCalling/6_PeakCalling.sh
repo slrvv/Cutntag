@@ -18,7 +18,7 @@ mkdir -p $projPath/peakCalling/SEACR
 
 #-------------------------Peak calling-----------------------------------------#
 
-##Peak calling with SEACR ask if you should igg substract the bedgraph files.
+
 echo "${histName}_bowtie2.fragments.normalized.bedgraph"
 bash $seacr $projPath/alignment/bedgraph/${histName}_bowtie2.fragments.normalized.bedgraph \
 $projPath/alignment/bedgraph/${histControl}_bowtie2.fragments.normalized.bedgraph \
