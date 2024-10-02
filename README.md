@@ -76,3 +76,13 @@ bash cut_and_tag_pipeline_example.sh > cut_and_tag_pipeline_example.out
 #IMPORTANT!! check the .out file for any errors. If any problems arise on your runs this will tell me what happened.
 history #shows you the recent commands
 ```
+
+## Meaning of file suffixes
+
+The pipeline produces many different files in SAM, BAM, BED, BEDGRAPH and BIGWIG 
+formats (explanation of formats: https://genome.ucsc.edu/FAQ/FAQformat.html). 
+Meanings of the file suffixes: 
+- .normalized: Spike-in normalized file
+- .rmDup: Deduplicated file
+- .substracted.igg: File with substracted igG
+
