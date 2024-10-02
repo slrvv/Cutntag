@@ -11,10 +11,10 @@
 library(dplyr)
 args <- commandArgs(trailingOnly=TRUE)
 projPath <- args[1]
+summaryPath <- args[2]
 
 #------------------------Sequencing depth--------------------------------------#
-sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_Latest.csv"),
+sampletable <- read.table(paste0(summaryPath),
                           header = T, sep = ",")
 
 sampleList <- sampletable$SampleName
@@ -30,7 +30,6 @@ for(exp in sampleList){
                        header = FALSE, fill = TRUE)
   alignRate = substr(alignRes$V1[6], 1, nchar(as.character(alignRes$V1[6]))-1)
   expInfo = strsplit(exp, "_")[[1]]
-  print(expInfo)
   alignResult = data.frame(Experiment = expInfo[1], Replicate = expInfo[2], 
                            SequencingDepth = alignRes$V1[1] %>% as.character %>% 
                                              as.numeric, 

@@ -12,7 +12,12 @@ library(viridis)
 library(dplyr)
 library(ggpubr)
 
-dupResult <- read.table("/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/alignment/summary_duplicates_all_experiments.txt",
+projectPath <- "/project/ChromGroup/Example" #fill this variable with the same path as PROJECTROOT in 
+# the cut_and_tag_pipeline.sh script
+
+dupResultPath <- paste0(projectPath, "/alignment/summary_duplicates_all_experiments.txt")
+
+dupResult <- read.table(dupResultPath,
                         header=T)
 
 DuplicationRate_cont <- strsplit(dupResult$DuplicationRate,
@@ -63,7 +68,9 @@ ggarrange(fig4A, fig4B, fig4C, ncol = 2, nrow=2, common.legend = TRUE, legend="b
 
 ## Fragment size plots
 
-fragLen <- read.table("/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/alignment/summary_fraglen_all_experiments.txt",
+fragLenPath <- paste0(projectPath, "/alignment/summary_fraglen_all_experiments.txt")
+
+fragLen <- read.table(fragLenPath,
                       header=T, stringsAsFactors = T)
 fragLen$Replicate <- as.factor(fragLen$Replicate)
 
@@ -82,7 +89,7 @@ fig5A = fragLen %>% ggplot(aes(x = sampleInfo,
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.7, size=10),
                 legend.title=element_text(size=14))
 fig5A
-?facet_grid
+
 fig5B = fragLen %>% ggplot(aes(x = fragLen, 
                                y = fragCount, 
                                color = Histone, group = sampleInfo, linetype = Replicate)) +
@@ -93,7 +100,7 @@ fig5B = fragLen %>% ggplot(aes(x = fragLen,
   ylab("Count") +
   coord_cartesian(xlim = c(0, 500))
 fig5B
-?facet_wrap
+
 ggarrange(fig5A, fig5B, ncol = 2)
 
 

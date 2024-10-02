@@ -38,7 +38,7 @@ O=$projPath/alignment/removeDuplicate/${name}_bowtie2.sorted.dupMarked.sam \
 METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/${name}_picard.dupMark.txt
 
 ## remove duplicates
-picardCMD MarkDuplicates I=$projPath/alignment/sam/${name}_bowtie2.sorted.sam \
+$picardCMD MarkDuplicates I=$projPath/alignment/sam/${name}_bowtie2.sorted.sam \
 O=$projPath/alignment/removeDuplicate/${name}_bowtie2.sorted.rmDup.sam \
 REMOVE_DUPLICATES=true \
 METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/${name}_picard.rmDup.txt

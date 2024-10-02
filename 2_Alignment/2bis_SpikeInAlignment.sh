@@ -11,10 +11,7 @@
 
 
 #-----------------------------Paths--------------------------------------------#
-#reference genome of the spike-in
-spikeInRef=$5
-#chromsize files for the reference genome of experiment (human)
-chromSize=/project/ChromGroup/Serkan_Project/cut_and_tag_analysis/tools/genome_annotations/hg38.chrom.sizes
+
 #root path of th whole project
 projPath=$1
 #fastqfiles for the replicates
@@ -22,6 +19,13 @@ rep1=$2
 rep2=$3
 #short name to id experiment
 name=$4
+
+#reference genome of the spike-in
+spikeInRef=$5
+#chromsize files for the reference genome of experiment (human)
+chromSize=$6
+DUPREMOVE=$7
+
 #------------------------Spike-in calibration script---------------------------#
 cores=8
 
@@ -50,4 +54,20 @@ if [[ "$seqDepth" -gt "1" ]]; then
   $projPath/alignment/bedgraph/${name}_bowtie2.fragments.normalized.bedgraph
 
 fi
+
+if [ "$DUPREMOVE" = true ]; then
+  echo "Rescale Dedup"
+  if [[ "$seqDepth" -gt "1" ]]; then
+  
+    mkdir -p $projPath/alignment/bedgraph
+    
+    scale_factor=`echo "10000 / $seqDepth" | bc -l`
+    echo "Scaling factor for $name is: $scale_factor!"
+    bedtools genomecov -bg -scale $scale_factor -i \
+    $projPath/alignment/bed/${name}_bowtie2.rmDup.fragments.bed -g $chromSize > \
+    $projPath/alignment/bedgraph/${name}_bowtie2.rmDup.fragments.normalized.bedgraph
+  
+  fi
+fi
+
 

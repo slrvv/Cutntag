@@ -11,10 +11,11 @@
 library(dplyr)
 args <- commandArgs(trailingOnly=TRUE)
 projPath <- args[1]
+summaryPath <- args[2]
+
 
 #------------------------Sequencing depth--------------------------------------#
-sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_Latest.csv"),
+sampletable <- read.table(summaryPath,
                           header = T, sep = ",")
 
 sampleList <- sampletable$SampleName
@@ -32,9 +33,9 @@ for(hist in sampleList){
                           MappedFragNum_spikeIn = spikeRes$V1[4] %>% as.character %>% as.numeric + spikeRes$V1[5] %>% as.character %>% as.numeric, 
                           AlignmentRate_spikeIn = alignRate %>% as.numeric)  %>% rbind(spikeAlign, .)
 }
-spikeAlign$Histone = factor(spikeAlign$Histone, levels = histList)
+spikeAlign$Histone = factor(spikeAlign$Histone, levels = nameList)
 spikeAlign %>% mutate(AlignmentRate_spikeIn = paste0(AlignmentRate_spikeIn, "%"))
-write.table(alignResult, paste0(projPath,
+write.table(spikeAlign, paste0(projPath,
                                 "/alignment/summary_seq_depth_spikein.txt"),
             row.names = FALSE)
 

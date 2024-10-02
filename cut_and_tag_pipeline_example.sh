@@ -24,24 +24,25 @@
 #          echo PROJECTROOT will throw an error or not work as expected.
 
 #project folder
-PROJECTROOT=/what/is/your/folder
+PROJECTROOT=/project/ChromGroup/Example 
 
 #rootfolder to the raw experimental data (folder from SeqCore)
 
 #Reminder: Raw data files are huge, there is no need to copy them into 
 #your own directory, this leads to IT related problems.
-RAWROOT=/what/is/ypur/seqcore/path
-#path to the folder with your experimental data
-PIPELINE=/where/is/the/pipeline
+RAWROOT=/project/solexawork/pipelined/230302_SN435_7_AACJTW7M5/demux_20230303_SN435-AACJTW7M5_std-8d1/Project_OWL/
+#path to the folder with your pipeline
+PIPELINE=$PROJECTROOT/pipeline
 #csv file with all of the experiments and a short id name
-EXPSUMMARY=$PROJECTROOT/yourfile.csv
+EXPSUMMARY=$PROJECTROOT/experiment_summary_example.csv
 #csv file with all of the experiments but replicates are given in columns
 #more suitable for the alignment step
-EXPSUMMARYAL=$PROJECTROOT/yourfile.csv
+EXPSUMMARYAL=$PROJECTROOT/experiment_summary_align_formatted_example.csv
 #csv file for peaks 
-EXPSUMMARYPEAKS=$PROJECTROOT/yourfile.csv
+EXPSUMMARYPEAKS=$PROJECTROOT/experiment_summary_peaks_example.csv
 DUPREMOVE=true #set to true if you want to have the duplicate removal files converted
 IGGNEED=true #set to true if you want to remove IgG from bw files
+
 
 #-------------------------Module Paths-----------------------------------------#
 # No need to change anything from now on
@@ -289,4 +290,3 @@ Rscript $PEAKSUMM $PROJECTROOT $EXPSUMMARYPEAKS #Reproducibility and summary
 # Frips: We calculate the fraction of reads in peaks (FRiPs) as a measure of signal-to-noise.
 Rscript $PEAKSFRIP $PROJECTROOT $EXPSUMMARYPEAKS 
 # 6_PeakCallingSummaryPlot.R for visualization
-

@@ -12,21 +12,36 @@
 args = commandArgs(trailingOnly=TRUE)
 print(length(args))
 root = args[1]
-Bedgraphpath <- paste0(root, "/alignment/bigwig/")
-FILE1 <- args[2]
-
+bwpath <- paste0(root, "/alignment/bigwig/")
+file <- args[2]
+dupremove <- args[3]
 #----------------Igg substaction-----------------------------------------------#
 
 library("GenomicRanges")
 library("rtracklayer")
 
-#gr <- import(paste0(Bedgraphpath, FILE1), as = "GRanges")
-print(FILE1)
-print(paste0(Bedgraphpath, FILE1))
-gr <- import(paste0(Bedgraphpath, FILE1),
-             as = "GRanges")
+iggzeroes <- function(file, bwpath){
+  cat(file)
+  gr <- import(paste0(bwpath, file),
+               as = "GRanges")
+  
+  gr$score[gr$score < 0] <- 0 
+  
+  export(gr, paste0(bwpath, file),
+         format = "bw")
+  return(0)
+}
 
-gr$score[gr$score < 0] <- 0 
+filenorm <- paste0(file, "_bowtie2.fragments.normalized.substracted.igg.bw")
+iggzeroes(filenorm, bwpath)
+filefrag <- paste0(file, "_bowtie2.fragments.substracted.igg.bw")
+iggzeroes(filefrag, bwpath)
+if (dupremove == "true"){
+  filededup <- paste0(file, "_bowtie2.rmDup.fragments.substracted.igg.bw")
+  iggzeroes(filededup, bwpath)
+  filenormdedup <- paste0(file, "_bowtie2.rmDup.fragments.normalized.substracted.igg.bw")
+  iggzeroes(filenormdedup, bwpath)
+}
 
-export(gr, paste0(Bedgraphpath, FILE1),
-             format = "bw")
+  
+

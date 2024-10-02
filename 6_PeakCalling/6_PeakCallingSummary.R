@@ -10,21 +10,20 @@
 
 #-------------------------Paths------------------------------------------------#
 library(dplyr)
+library(GenomicRanges)
 args <- commandArgs(trailingOnly=TRUE)
 projPath <- args[1]
-
-library(GenomicRanges)
+summaryPath <- args[2]
 
 #------------------------Sequencing depth--------------------------------------#
-sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_peaks.csv"),
+sampletable <- read.table(summaryPath,
                           header = T, sep = ",")
 
 sampleList <- sampletable$SampleName
 
 peakN = c()
 peakWidth = c()
-peakType = c("control", "top0.01")
+peakType = c("control", "top0.01", "control.rmDup", "top0.01.rmDup")
 for(hist in sampleList){
   histInfo = strsplit(hist, "_")[[1]]
   if(histInfo[1] != "IgG"){
@@ -35,11 +34,16 @@ for(hist in sampleList){
     }
   }
 }
+
+write.table(peakWidth, paste0(projPath, 
+                               "/alignment/summary_peak_calling_width.txt"),
+            row.names = F)
+
 peakN %>% select(Histone, Replicate, peakType, peakN)
 
-histL = peakN$Histone
+histL = unique(peakN$Histone)
 repL = c(1,2)
-peakType = c("control", "top0.01")
+peakType = c("control", "top0.01", "control.rmDup", "top0.01.rmDup")
 peakOverlap = c()
 for(type in peakType){
   for(hist in histL){
@@ -53,29 +57,24 @@ for(type in peakType){
                      "_seacr_",
                      type,
                      ".peaks.stringent.bed")
-
-      if(!exists(file)){
-        print(paste0(file, " doesn't exist"))
-      }else{
         
         peakInfo = read.table(file, header = FALSE, fill = TRUE)
         peakInfo.gr = GRanges(peakInfo$V1, IRanges(start = peakInfo$V2, end = peakInfo$V3), strand = "*")
         if(length(overlap.gr) >0){
-            overlap.gr = overlap.gr[findOverlaps(overlap.gr, peakInfo.gr)@from]
+            overlap.gr = intersect(overlap.gr, peakInfo.gr)
         }else{
           overlap.gr = peakInfo.gr
           
-      } 
-      }
+        } 
     }
     peakOverlap = data.frame(peakReprod = length(overlap.gr), Histone = hist, peakType = type) %>% rbind(peakOverlap, .)
-    }
   }
+}
 
 
-peakReprod = left_join(peakN, peakOverlap, by = c("Histone", "peakType")) %>% mutate(peakReprodRate = peakReprod/peakN * 100)
+peakReprod = left_join(peakN, peakOverlap, by = c("Histone", "peakType")) %>% mutate(peakReprodRate = (peakReprod/peakN) * 100)
 peakReprod %>% select(Histone, Replicate, peakType, peakN, peakReprodNum = peakReprod, peakReprodRate)
 
 write.table(peakReprod, paste0(projPath, 
-                                 "alignment/summary/PeakCallingsummary.csv"),
-                          header = T, row.names = F)
+                                 "/alignment/summary_peak_calling.txt"),
+            row.names = F)

@@ -10,11 +10,11 @@
 #-------------------------Paths------------------------------------------------#
 library(dplyr)
 args <- commandArgs(trailingOnly=TRUE)
-projPath <- "/project/ChromGroup/Serkan_Project/cut_and_tag_rloops/"
+projPath <- args[1]
+summaryPath <- args[2]
 
 #------------------------Sequencing depth--------------------------------------#
-sampletable <- read.table(paste0(projPath, 
-                                 "/experiment_summary_Latest.csv"),
+sampletable <- read.table(paste0(summaryPath),
                           header = T, sep = ",")
 alignSummary <- read.table(paste0(projPath,
                                   "/alignment/summary_seq_depth_all_experiments.txt"),
