@@ -86,7 +86,7 @@ if [ "$DUPREMOVE" = true ]; then
   $BAMPATH/$filename.mapped.rmDup.bam
   
   ## Convert into bed file format
-  echo "Convert to bed file formant"
+  echo "Convert to bed file format"
   bedtools bamtobed -i $BAMPATH/${filename}.mapped.rmDup.bam -bedpe > \
   $BEDPATH/${filename}_bowtie2.rmDup.bed
   

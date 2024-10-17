@@ -1,3 +1,13 @@
 .RData
 .Rhistory
-
+.DS_Store
+._.DS_Store
+._cut_and_tag_pipeline.sh
+._cut_and_tag_pipeline_example.sh
+._cut_and_tag_pipeline_tutorial.sh
+._merge_IgG.sh
+1_QualityControl/._1_QC_Preprocessing.sh
+2_Alignment/._2bis_SpikeInAlignment.sh
+5_SubstractionAndScaling/._5_IgGSubstract.R
+5_SubstractionAndScaling/._5_IgGSubstract.sh
+cut_and_tag_pipeline_example.out

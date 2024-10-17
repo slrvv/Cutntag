@@ -200,10 +200,10 @@ cores=8 # feel free to change this variable
 #which are available
 
 #if you are using mouse:
-#refspike=/project/genomes/mm10/Sequence/Bowtie2Index/genome
+refspike=/project/genomes/mm10/Sequence/Bowtie2Index/genome
 #prebuild indexes https://benlangmead.github.io/aws-indexes/bowtie
 
-refspike=/project/genomes/Escherichia_coli/K12_DH10B/NCBI/2008-03-17/Sequence/Bowtie2Index/genome
+#refspike=/project/genomes/Escherichia_coli/K12_DH10B/NCBI/2008-03-17/Sequence/Bowtie2Index/genome
 
 #Human chromsizes
 chromSize=$PROJECTROOT/pipeline/hg38.chrom.sizes
@@ -288,5 +288,5 @@ done < <(tail -n +2 $EXPSUMMARYPEAKS)
 Rscript $PEAKSUMM $PROJECTROOT $EXPSUMMARYPEAKS #Reproducibility and summary
 
 # Frips: We calculate the fraction of reads in peaks (FRiPs) as a measure of signal-to-noise.
-Rscript $PEAKSFRIP $PROJECTROOT $EXPSUMMARYPEAKS 
+Rscript $PEAKSFRIP $PROJECTROOT $EXPSUMMARYPEAKS
 # 6_PeakCallingSummaryPlot.R for visualization

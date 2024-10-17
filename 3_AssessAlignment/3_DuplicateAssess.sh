@@ -27,10 +27,10 @@ ref=$5
 
 mkdir -p $projPath/alignment/removeDuplicate/picard_summary
 
-## Sort by coordinate
+## Sort by name
 $picardCMD SortSam I=$projPath/alignment/sam/${name}_bowtie2.sam \
 O=$projPath/alignment/sam/${name}_bowtie2.sorted.sam \
-SORT_ORDER=coordinate
+SORT_ORDER=queryname
 
 ## mark duplicates
 $picardCMD MarkDuplicates I=$projPath/alignment/sam/${name}_bowtie2.sorted.sam \

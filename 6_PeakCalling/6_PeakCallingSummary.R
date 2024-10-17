@@ -9,8 +9,8 @@
 
 
 #-------------------------Paths------------------------------------------------#
-library(dplyr)
-library(GenomicRanges)
+library(dplyr, quietly = TRUE)
+library(GenomicRanges, quietly = TRUE)
 args <- commandArgs(trailingOnly=TRUE)
 projPath <- args[1]
 summaryPath <- args[2]

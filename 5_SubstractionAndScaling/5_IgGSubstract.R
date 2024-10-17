@@ -17,8 +17,8 @@ file <- args[2]
 dupremove <- args[3]
 #----------------Igg substaction-----------------------------------------------#
 
-library("GenomicRanges")
-library("rtracklayer")
+library("GenomicRanges", quietly = TRUE)
+library("rtracklayer", quietly = TRUE)
 
 iggzeroes <- function(file, bwpath){
   cat(file)

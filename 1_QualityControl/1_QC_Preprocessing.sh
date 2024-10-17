@@ -30,7 +30,7 @@ EXPPATH=$2
 #make the path to save the FASTQC outputs
 mkdir -p ${OUTPUTPATH}
 
-$FASTQC -o $OUTPUTPATH -f fastq $EXPPATH
+$FASTQC -q -o $OUTPUTPATH -f fastq $EXPPATH
 
 #Merging
 #No merging for now, so we can assess the quality of replicates with IGV ask 
