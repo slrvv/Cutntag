@@ -34,12 +34,12 @@ RAWROOT=/project/solexawork/pipelined/230302_SN435_7_AACJTW7M5/demux_20230303_SN
 #path to the folder with your pipeline
 PIPELINE=$PROJECTROOT/pipeline
 #csv file with all of the experiments and a short id name
-EXPSUMMARY=$PROJECTROOT/experiment_summary_example.csv
+EXPSUMMARY=$PROJECTROOT/experiment_summary_example_fra.csv
 #csv file with all of the experiments but replicates are given in columns
 #more suitable for the alignment step
-EXPSUMMARYAL=$PROJECTROOT/experiment_summary_align_formatted_example.csv
+EXPSUMMARYAL=$PROJECTROOT/experiment_summary_align_formatted_example_fra.csv
 #csv file for peaks 
-EXPSUMMARYPEAKS=$PROJECTROOT/experiment_summary_peaks_example.csv
+EXPSUMMARYPEAKS=$PROJECTROOT/experiment_summary_peaks_example_fra.csv
 DUPREMOVE=true #set to true if you want to have the duplicate removal files converted
 IGGNEED=true #set to true if you want to remove IgG from bw files
 
@@ -83,7 +83,7 @@ PEAKSFRIP=$PIPELINE/6_PeakCalling/6_PeakCallingFrips.R
 echo "Quality Control with FASTQC"
 echo " "
 mkdir -p $PROJECTROOT/FastQCResults/
-while read line ; do
+while read -r line ; do
     set $line
     IFS=$','; split=($line); unset IFS;
     echo "Name of experiment ${split[0]}"
@@ -120,18 +120,18 @@ while read line ; do
      bash $ALIGN $RAWROOT/${split[1]} $RAWROOT/${split[2]} $PROJECTROOT ${split[0]} $ref
      echo " "
 done < <(tail -n +2 $EXPSUMMARYAL)
-
-#-------------------3. Alignment Summary and assessment------------------------#
-
-#Produce a table summarizing the sequencing depth of all of the alignments
-echo "Make Alignment Summary"
+#
+# #-------------------3. Alignment Summary and assessment------------------------#
+#
+# #Produce a table summarizing the sequencing depth of all of the alignments
+# echo "Make Alignment Summary"
 Rscript $SUMMARYAL $PROJECTROOT $EXPSUMMARYAL
 echo " "
 
 #Create summary plots for the alignments using the 3_MappingPlots.R script
 
 #Assess the number of duplicates
-
+#
 echo "Assess Duplicates"
 while read line ; do
     set $line
@@ -157,7 +157,7 @@ done < <(tail -n +2 $EXPSUMMARYAL)
 echo "Summary Tables"
 Rscript $DUPSUM $PROJECTROOT $EXPSUMMARYAL
 Rscript $FRAGSUM $PROJECTROOT $EXPSUMMARYAL
-
+#
 #If you want to make plots to visualize fragment and duplicate statistics
 #3_PlotsFragandDup.R
 
@@ -183,9 +183,9 @@ done < <(tail -n +2 $EXPSUMMARYAL)
 # really high you might want to remove it.
 
 #To study the reproducibility between replicates and across conditions,
-#the genome is split into 500 bp bins, and a Pearson correlation of the 
-#log2-transformed values of read counts in each bin is calculated between 
-#replicate datasets. 
+#the genome is split into 500 bp bins, and a Pearson correlation of the
+#log2-transformed values of read counts in each bin is calculated between
+#replicate datasets.
 Rscript $REPREPRO $PROJECTROOT $EXPSUMMARYAL $DUPREMOVE
 
 #Plot replicate matrices using 4_ReproducibilityPlots.R
@@ -284,9 +284,9 @@ while read line ; do
      bash $PEAKS $PROJECTROOT ${split[1]} ${split[0]} $DUPREMOVE
 done < <(tail -n +2 $EXPSUMMARYPEAKS)
 
-#Create summary statistics on the peaks called
+# #Create summary statistics on the peaks called
 Rscript $PEAKSUMM $PROJECTROOT $EXPSUMMARYPEAKS #Reproducibility and summary
-
-# Frips: We calculate the fraction of reads in peaks (FRiPs) as a measure of signal-to-noise.
+#
+# # Frips: We calculate the fraction of reads in peaks (FRiPs) as a measure of signal-to-noise.
 Rscript $PEAKSFRIP $PROJECTROOT $EXPSUMMARYPEAKS
-# 6_PeakCallingSummaryPlot.R for visualization
+# # 6_PeakCallingSummaryPlot.R for visualization

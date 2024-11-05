@@ -86,3 +86,9 @@ Meanings of the file suffixes:
 - .rmDup: Deduplicated file
 - .substracted.igg: File with substracted igG
 
+## Naming recommendation
+
+We recommend using "_" to specify the replicates (e.g. H3K4me3_1), if you have 
+knockdowns or over-expressions please use PROTEINKD_1 or PROTEIN.KD_1 but not
+PROTEIN_KD_1.
+

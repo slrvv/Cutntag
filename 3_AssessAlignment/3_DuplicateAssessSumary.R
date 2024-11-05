@@ -26,6 +26,7 @@ nameList <- unique(sapply(strsplit(sampleList,"_"), `[`, 1))
 
 ## Collect the alignment results from the bowtie2 alignment summary files
 dupResult = c()
+
 for(exp in sampleList){
   dupRes = read.table(paste0(projPath, 
                              "/alignment/removeDuplicate/picard_summary/",
@@ -33,9 +34,9 @@ for(exp in sampleList){
                       header = TRUE, 
                       fill = TRUE)
   
-  expInfo = strsplit(exp, "_")[[1]]
+  expInfo = unlist(strsplit(exp, "_", fixed = T))
   dupResult = data.frame(Experiment = expInfo[1],
-                         Replicate = expInfo[2], 
+                         Replicate = paste(expInfo[-1], collapse = "_"), 
                          MappedFragNum_hg38 = dupRes$READ_PAIRS_EXAMINED[1] %>% 
                            as.character %>% as.numeric,
                          DuplicationRate = dupRes$PERCENT_DUPLICATION[1] %>%
@@ -44,6 +45,7 @@ for(exp in sampleList){
                            as.character %>% as.numeric) %>%
     mutate(UniqueFragNum = MappedFragNum_hg38 * (1-DuplicationRate/100))  %>% 
     rbind(dupResult, .)
+
 }
 
 dupResult$Experiment = factor(dupResult$Experiment, levels = nameList)

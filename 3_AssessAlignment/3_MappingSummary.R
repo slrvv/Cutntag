@@ -29,8 +29,8 @@ for(exp in sampleList){
                               exp, "_bowtie2.txt"), 
                        header = FALSE, fill = TRUE)
   alignRate = substr(alignRes$V1[6], 1, nchar(as.character(alignRes$V1[6]))-1)
-  expInfo = strsplit(exp, "_")[[1]]
-  alignResult = data.frame(Experiment = expInfo[1], Replicate = expInfo[2], 
+  expInfo = strsplit(exp, "_", fixed = T)[[1]]
+  alignResult = data.frame(Experiment = expInfo[1], Replicate = paste(expInfo[-1], collapse = "_"), 
                            SequencingDepth = alignRes$V1[1] %>% as.character %>% 
                                              as.numeric, 
                            MappedFragNum_hg38 = alignRes$V1[4] %>% 
@@ -41,8 +41,10 @@ for(exp in sampleList){
                                                 rbind(alignResult, .)
 }
 alignResult$Histone = factor(alignResult$Experiment, levels = nameList)
+
 alignResult <- alignResult %>% mutate(AlignmentRate_hg38 = paste0(AlignmentRate_hg38, 
                                                            "%"))
+
 write.table(alignResult, paste0(projPath,
                          "/alignment/summary_seq_depth_all_experiments.txt"),
                          row.names = FALSE)

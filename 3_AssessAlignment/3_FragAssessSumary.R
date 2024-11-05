@@ -20,15 +20,16 @@ alignSummary <- read.table(paste0(projPath,
                                   "/alignment/summary_seq_depth_all_experiments.txt"),
                            header=T, sep=",")
 sampleList <- sampletable$SampleName
-
+sampleList
 nameList <- unique(sapply(strsplit(sampleList,"_"), `[`, 1))
 
 fragLen = c()
 
 for(hist in sampleList){
   
-  histInfo = strsplit(hist, "_")[[1]]
-  fragLen = read.table(paste0(projPath, "/alignment/sam/fragmentLen/", hist, "_fragmentLen.txt"), header = FALSE) %>% mutate(fragLen = V1 %>% as.numeric, fragCount = V2 %>% as.numeric, Weight = as.numeric(V2)/sum(as.numeric(V2)), Histone = histInfo[1], Replicate = histInfo[2], sampleInfo = hist) %>% rbind(fragLen, .) 
+  histInfo = unlist(strsplit(hist, "_", fixed = T))
+  fragLen = read.table(paste0(projPath, "/alignment/sam/fragmentLen/", hist, "_fragmentLen.txt"), header = FALSE) %>% 
+    mutate(fragLen = V1 %>% as.numeric, fragCount = V2 %>% as.numeric, Weight = as.numeric(V2)/sum(as.numeric(V2)), Histone = histInfo[1], Replicate = paste(histInfo[-1], collapse = "_"), sampleInfo = hist) %>% rbind(fragLen, .) 
 }
 
 fragLen$sampleInfo = factor(fragLen$sampleInfo, levels = sampleList)

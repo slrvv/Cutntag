@@ -11,3 +11,9 @@
 5_SubstractionAndScaling/._5_IgGSubstract.R
 5_SubstractionAndScaling/._5_IgGSubstract.sh
 cut_and_tag_pipeline_example.out
+._cut_and_tag_pipeline_example_v1.sh
+3_AssessAlignment/._3_DuplicateAssess.sh
+3_AssessAlignment/._3_DuplicateAssessSumary.R
+3_AssessAlignment/._3_FragAssessSumary.R
+3_AssessAlignment/._3_MappingSummary.R
+cut_and_tag_pipeline_example_v1.sh
