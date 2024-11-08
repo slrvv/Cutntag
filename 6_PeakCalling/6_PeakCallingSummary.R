@@ -16,8 +16,6 @@ args <- commandArgs(trailingOnly=TRUE)
 projPath <- args[1]
 summaryPath <- args[2]
 
-projPath <- "/project/ChromGroup_Seq_data/Celeste/2024_summer_HBD"
-summaryPath <- "/project/ChromGroup_Seq_data/Celeste/2024_summer_HBD/experiment_summary_peaks_HBD.csv"
 
 #------------------------Sequencing depth--------------------------------------#
 
