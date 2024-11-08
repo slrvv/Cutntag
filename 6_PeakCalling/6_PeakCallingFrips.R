@@ -21,7 +21,6 @@ summaryPath <- args[2]
 #------------------------Sequencing depth--------------------------------------#
 
 
-
 sampletable <- read.table(summaryPath,
                           header = T, sep = ",")
 alignResult <- read.table(paste0(projPath, 
@@ -33,16 +32,26 @@ sampleList <- sampletable$SampleName
 
 bamDir = paste0(projPath, "/alignment/bam")
 inPeakData = c()
+sampleList
 
 for(hist in sampleList){
   ## overlap with bam file to get count for the not deduplicated peaks
-  peakRes = read.table(paste0(projPath, "/peakCalling/SEACR/", 
-                              hist,"_seacr_control.peaks.stringent.bed"), header = FALSE, fill = TRUE)
-  peak.gr = GRanges(seqnames = peakRes$V1, IRanges(start = peakRes$V2, end = peakRes$V3), strand = "*")
-  bamFile = paste0(bamDir, "/", hist,".mapped.bam")
-  histInfo <- unlist(strsplit(hist, "_", fixed = T))
-  fragment_counts <- getCounts(bamFile, peak.gr, paired = TRUE, by_rg = FALSE, format = "bam")
-  inPeakN = counts(fragment_counts)[,1] %>% sum
+  file <- paste0(projPath, "/peakCalling/SEACR/", 
+         hist,"_seacr_control.peaks.stringent.bed")
+
+  if (file.info(file)$size !=0 ){
+    peakRes = read.table(file, header = FALSE, fill = TRUE)
+    peak.gr = GRanges(seqnames = peakRes$V1, IRanges(start = peakRes$V2, end = peakRes$V3), strand = "*")
+    bamFile = paste0(bamDir, "/", hist,".mapped.bam")
+    histInfo <- unlist(strsplit(hist, "_", fixed = T))
+    fragment_counts <- getCounts(bamFile, peak.gr, paired = TRUE, by_rg = FALSE, format = "bam")
+    inPeakN = counts(fragment_counts)[,1] %>% sum
+    
+  } else { 
+    histInfo <- unlist(strsplit(hist, "_", fixed = T))
+    inPeakN <- 0
+  }
+  
 
 
   inPeakData = rbind(inPeakData, data.frame(inPeakN = inPeakN,
@@ -50,6 +59,7 @@ for(hist in sampleList){
                                             Replicate = paste(histInfo[-1], collapse = "_")))
 
 }
+inPeakData
 
 frip = left_join(inPeakData, alignResult, by = c("Histone", "Replicate")) %>% 
   mutate(frip = inPeakN/MappedFragNum_hg38 * 100, )
